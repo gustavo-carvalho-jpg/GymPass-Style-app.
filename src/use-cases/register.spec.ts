@@ -1,15 +1,20 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { RegisterUseCase } from './register';
 import { compare } from 'bcryptjs';
 import { InMemoryRepository } from '@/repositories/in-memory-users-repository';
 import { UserAlreadyExistsError } from './erros/user-already-exists';
 
-describe('Register Use Case', () => {
-  it('should hash user password upon registration', async () => {
-    const usersRepository = new InMemoryRepository();
-    const registerUserCase = new RegisterUseCase(usersRepository);
+let usersRepository: InMemoryRepository;
+let sut: RegisterUseCase;
 
-    const { user } = await registerUserCase.execute({
+describe('Register Use Case', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryRepository();
+    sut = new RegisterUseCase(usersRepository);
+  });
+
+  it('should hash user password upon registration', async () => {
+    const { user } = await sut.execute({
       name: 'teste',
       email: 'teste@gmail.com',
       password: '123456',
@@ -24,19 +29,16 @@ describe('Register Use Case', () => {
   });
 
   it('should not be able to register with same email twice', async () => {
-    const usersRepository = new InMemoryRepository();
-    const registerUserCase = new RegisterUseCase(usersRepository);
-
     const email = 'teste@gmail.com';
 
-    await registerUserCase.execute({
+    await sut.execute({
       name: 'teste',
       email,
       password: '123456',
     });
 
     await expect(() =>
-      registerUserCase.execute({
+      sut.execute({
         email,
         name: 'teste-2',
         password: '123456',
@@ -45,10 +47,7 @@ describe('Register Use Case', () => {
   });
 
   it('should be able to register', async () => {
-    const usersRepository = new InMemoryRepository();
-    const registerUserCase = new RegisterUseCase(usersRepository);
-
-    const { user } = await registerUserCase.execute({
+    const { user } = await sut.execute({
       name: 'teste',
       email: 'teste@gmail.com',
       password: '123456',

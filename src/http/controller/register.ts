@@ -26,7 +26,6 @@ export const register = async (
       return reply.status(409).send({ message: e.message });
     }
     throw e;
-    return reply.status(500).send();
   }
 
   return reply.status(201).send();
