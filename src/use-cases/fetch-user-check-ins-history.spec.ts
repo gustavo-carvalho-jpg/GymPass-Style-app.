@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository';
 import { FetchUserCheckInsHistoryUseCase } from './fetch-user-check-ins-history';
 
@@ -46,8 +46,6 @@ describe('Fetch User Check-In History Use Case', () => {
       userId: 'user-01',
       page: 2,
     });
-
-    console.log(checkIns);
 
     expect(checkIns).toEqual([
       expect.objectContaining({ gym_id: 'gym-21' }),
